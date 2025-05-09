@@ -57,8 +57,6 @@ func _on_lobby_created(_connect: int, _lobby_id: int):
 		peer.create_host(0)
 		multiplayer.set_multiplayer_peer(peer)
 		
-		add_player(1)
-		
 		print("Create lobby id:",str(lobby_id))
 	else:
 		print("Error on create lobby!")
@@ -68,6 +66,7 @@ func join_game(lobby_id, new_player_name):
 	Steam.joinLobby(int(lobby_id))
 
 func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int):
+	print("onlz when you join probably")
 	if response == 1:
 		var id = Steam.getLobbyOwner(lobby)
 		if id != Steam.getSteamID():
