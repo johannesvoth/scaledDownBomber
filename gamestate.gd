@@ -80,7 +80,7 @@ func unregister_player(id):
 
 
 @rpc("call_local")
-func load_world():
+func load_world(): # I would have to check the hotjoin replication with that stuff
 	# Change scene.
 	var world = load("res://world.tscn").instantiate()
 	get_tree().get_root().add_child(world)
@@ -145,12 +145,14 @@ func _ready():
 	multiplayer.server_disconnected.connect(self._server_disconnected)
 	Steam.lobby_joined.connect(_on_lobby_joined.bind())
 	Steam.lobby_created.connect(_on_lobby_created.bind())
+	
 
 
 func _on_lobby_created(_connect: int, _lobby_id: int):
 	if _connect == 1:
 		lobby_id = _lobby_id
 		Steam.setLobbyData(_lobby_id, "name", "test_server")
+		Steam.setLobbyJoinable(_lobby_id, true)
 		create_socket()
 		print("Create lobby id:",str(lobby_id))
 	else:
