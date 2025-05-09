@@ -17,7 +17,6 @@ should type in his address and press 'play'."
 config/tags=PackedStringArray("2d", "demo", "network", "official")
 run/main_scene="res://lobby.tscn"
 config/features=PackedStringArray("4.4")
-config/icon="res://icon.webp"
 
 [autoload]
 
