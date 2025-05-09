@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://dfoxbflmunwnk" path="res://rock.gd" id="1"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_573fp"]
-load_path = "res://.godot/imported/brickfloor.png-bab1cbace80ab627972eea565951db9e.ctex"
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(48, 48)

@@ -86,10 +86,6 @@ func load_world():
 	get_tree().get_root().add_child(world)
 	get_tree().get_root().get_node("Lobby").hide()
 
-	# Set up score.
-	world.get_node("Score").add_player(multiplayer.get_unique_id(), player_name)
-	for pn in players:
-		world.get_node("Score").add_player(pn, players[pn])
 	get_tree().set_pause(false) # Unpause and unleash the game!
 
 
@@ -118,18 +114,8 @@ func begin_game():
 	var world = get_tree().get_root().get_node("World")
 	var player_scene = load("res://player.tscn")
 
-	# Create a dictionary with peer id and respective spawn points, could be improved by randomizing.
-	var spawn_points = {}
-	spawn_points[1] = 0 # Server in spawn point 0.
-	var spawn_point_idx = 1
-	for p in players:
-		spawn_points[p] = spawn_point_idx
-		spawn_point_idx += 1
-
-	for p_id in spawn_points:
-		var spawn_pos = world.get_node("SpawnPoints/" + str(spawn_points[p_id])).position
+	for p_id in players:
 		var player = player_scene.instantiate()
-		player.global_position = spawn_pos
 		player.name = str(p_id)
 		player.set_multiplayer_authority(p_id)
 		player.set_player_name(player_name if p_id == multiplayer.get_unique_id() else players[p_id])

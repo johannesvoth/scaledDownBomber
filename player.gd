@@ -8,12 +8,11 @@ var stunned = false
 
 @onready
 var last_bomb_time = BOMB_RATE
-var current_anim = ""
 
 func _ready():
 	stunned = false
 	if str(name).is_valid_int():
-		get_node("Inputs/InputsSync").set_multiplayer_authority(str(name).to_int())
+		set_multiplayer_authority(str(name).to_int())
 
 
 func _physics_process(delta):
@@ -44,8 +43,6 @@ func _physics_process(delta):
 		velocity = motion * MOTION_SPEED
 		move_and_slide()
 
-	# Also update the animation based on the last known player input state
-	var new_anim = "standing"
 
 
 func set_player_name(value):
