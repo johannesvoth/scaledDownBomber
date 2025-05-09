@@ -1,7 +1,6 @@
-res://lobby.tscn
+res://game.tscn
+res://game_ui.gd
+res://multiplayer_manager.gd
 res://player.tscn
-res://bomb.tscn
-res://rock.tscn
 res://world.tscn
-res://player.gd
-res://gamestate.gd
+res://lobby.tscn

@@ -15,12 +15,8 @@ config/description="A multiplayer implementation of the classical bomberman game
 One of the players should press 'host', while the other
 should type in his address and press 'play'."
 config/tags=PackedStringArray("2d", "demo", "network", "official")
-run/main_scene="res://lobby.tscn"
+run/main_scene="uid://cmhwj7y7eww8a"
 config/features=PackedStringArray("4.4")
-
-[autoload]
-
-gamestate="*res://gamestate.gd"
 
 [display]
 

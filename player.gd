@@ -43,6 +43,7 @@ func _physics_process(delta):
 		velocity = motion * MOTION_SPEED
 		move_and_slide()
 
+	# Also update the animation based on the last known player input state
 
 
 func set_player_name(value):

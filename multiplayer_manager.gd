@@ -13,6 +13,8 @@ var peer = null
 # Name for my player.
 var player_name = "The Warrior"
 
+@onready var players_spawn: Node = $"../PlayersSpawn"
+
 # Names for remote players in id:name format.
 var players = {}
 var players_ready = []
@@ -29,6 +31,64 @@ signal game_error(what)
 
 func _process(delta):
 	Steam.run_callbacks()
+
+func _ready():
+	Steam.steamInit(480)
+	multiplayer.peer_connected.connect(self._player_connected)
+	multiplayer.peer_disconnected.connect(self._player_disconnected)
+	multiplayer.connected_to_server.connect(self._connected_ok)
+	multiplayer.connection_failed.connect(self._connected_fail)
+	multiplayer.server_disconnected.connect(self._server_disconnected)
+	Steam.lobby_joined.connect(_on_lobby_joined.bind())
+	Steam.lobby_created.connect(_on_lobby_created.bind())
+
+
+func host_game():
+	print("host game")
+	Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, MAX_PEERS)
+
+func _on_lobby_created(_connect: int, _lobby_id: int):
+	print("_on_lobby_created")
+	if _connect == 1:
+		lobby_id = _lobby_id
+		Steam.setLobbyData(_lobby_id, "name", "test_server")
+		
+		peer = SteamMultiplayerPeer.new()
+		peer.create_host(0)
+		multiplayer.set_multiplayer_peer(peer)
+		
+		add_player(1)
+		
+		print("Create lobby id:",str(lobby_id))
+	else:
+		print("Error on create lobby!")
+
+func join_game(lobby_id, new_player_name):
+	player_name = new_player_name
+	Steam.joinLobby(int(lobby_id))
+
+func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int):
+	if response == 1:
+		var id = Steam.getLobbyOwner(lobby)
+		if id != Steam.getSteamID():
+			peer = SteamMultiplayerPeer.new()
+			peer.create_client(id, 0)
+			multiplayer.set_multiplayer_peer(peer)
+			
+			add_player(peer.get_unique_id())
+
+
+func add_player(p_id):
+	var player_scene = load("res://player.tscn")
+
+	var host_player = player_scene.instantiate()
+	host_player.name = str(p_id)
+	host_player.set_multiplayer_authority(p_id)
+	players_spawn.add_child(host_player)
+
+
+
+
 
 
 # Callback from SceneTree.
@@ -47,24 +107,20 @@ func _player_disconnected(id):
 		# Unregister this player.
 		unregister_player(id)
 
-
 # Callback from SceneTree, only for clients (not server).
 func _connected_ok():
 	# We just connected to a server
 	connection_succeeded.emit()
-
 
 # Callback from SceneTree, only for clients (not server).
 func _server_disconnected():
 	game_error.emit("Server disconnected")
 	end_game()
 
-
 # Callback from SceneTree, only for clients (not server).
 func _connected_fail():
 	multiplayer.set_network_peer(null) # Remove peer
 	connection_failed.emit()
-
 
 # Lobby management functions.
 @rpc("any_peer")
@@ -73,11 +129,9 @@ func register_player(new_player_name):
 	players[id] = new_player_name
 	player_list_changed.emit()
 
-
 func unregister_player(id):
 	players.erase(id)
 	player_list_changed.emit()
-
 
 @rpc("call_local")
 func load_world(): # I would have to check the hotjoin replication with that stuff
@@ -88,23 +142,6 @@ func load_world(): # I would have to check the hotjoin replication with that stu
 
 	get_tree().set_pause(false) # Unpause and unleash the game!
 
-
-func host_game(new_player_name):
-	player_name = new_player_name
-	Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, MAX_PEERS)
-
-
-func join_game(lobby_id, new_player_name):
-	player_name = new_player_name
-	Steam.joinLobby(int(lobby_id))
-
-
-func get_player_list():
-	return players.values()
-
-
-func get_player_name():
-	return player_name
 
 
 func begin_game():
@@ -134,64 +171,3 @@ func end_game():
 
 	game_ended.emit()
 	players.clear()
-
-
-func _ready():
-	Steam.steamInit(480)
-	multiplayer.peer_connected.connect(self._player_connected)
-	multiplayer.peer_disconnected.connect(self._player_disconnected)
-	multiplayer.connected_to_server.connect(self._connected_ok)
-	multiplayer.connection_failed.connect(self._connected_fail)
-	multiplayer.server_disconnected.connect(self._server_disconnected)
-	Steam.lobby_joined.connect(_on_lobby_joined.bind())
-	Steam.lobby_created.connect(_on_lobby_created.bind())
-	
-
-
-func _on_lobby_created(_connect: int, _lobby_id: int):
-	if _connect == 1:
-		lobby_id = _lobby_id
-		Steam.setLobbyData(_lobby_id, "name", "test_server")
-		Steam.setLobbyJoinable(_lobby_id, true)
-		create_socket()
-		print("Create lobby id:",str(lobby_id))
-	else:
-		print("Error on create lobby!")
-
-
-func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int):
-	if response == 1:
-		var id = Steam.getLobbyOwner(lobby)
-		if id != Steam.getSteamID():
-			connect_socket(id)
-	else:
-		# Get the failure reason
-		var FAIL_REASON: String
-		match response:
-			2:  FAIL_REASON = "This lobby no longer exists."
-			3:  FAIL_REASON = "You don't have permission to join this lobby."
-			4:  FAIL_REASON = "The lobby is now full."
-			5:  FAIL_REASON = "Uh... something unexpected happened!"
-			6:  FAIL_REASON = "You are banned from this lobby."
-			7:  FAIL_REASON = "You cannot join due to having a limited account."
-			8:  FAIL_REASON = "This lobby is locked or disabled."
-			9:  FAIL_REASON = "This lobby is community locked."
-			10: FAIL_REASON = "A user in the lobby has blocked you from joining."
-			11: FAIL_REASON = "A user you have blocked is in the lobby."
-		print(FAIL_REASON)
-
-
-func create_socket():
-	peer = SteamMultiplayerPeer.new()
-	# Example of peer config
-	#peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_SEND_BUFFER_SIZE, 524288)
-	peer.create_host(0)
-	multiplayer.set_multiplayer_peer(peer)
-
-
-func connect_socket(steam_id : int):
-	peer = SteamMultiplayerPeer.new()
-	# Example of peer config
-	# peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_SEND_BUFFER_SIZE, 524288)
-	peer.create_client(steam_id, 0)
-	multiplayer.set_multiplayer_peer(peer)
