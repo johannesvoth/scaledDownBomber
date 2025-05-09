@@ -17,4 +17,3 @@ func _on_join_pressed():
 
 func _on_connection_success():
 	$Connect.hide()
-	$Players.show()
