@@ -4,3 +4,4 @@ res://bomb.tscn
 res://rock.tscn
 res://world.tscn
 res://player.gd
+res://gamestate.gd

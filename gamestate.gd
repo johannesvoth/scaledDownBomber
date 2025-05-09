@@ -114,6 +114,11 @@ func begin_game():
 	var world = get_tree().get_root().get_node("World")
 	var player_scene = load("res://player.tscn")
 
+	var host_player = player_scene.instantiate()
+	host_player.name = str(1)
+	host_player.set_multiplayer_authority(1)
+	world.get_node("Players").add_child(host_player)
+	
 	for p_id in players:
 		var player = player_scene.instantiate()
 		player.name = str(p_id)
