@@ -57,7 +57,7 @@ func _on_lobby_created(_connect: int, _lobby_id: int):
 		peer.create_host(0)
 		multiplayer.set_multiplayer_peer(peer)
 		
-		add_player(peer.get_unique_id())
+		#add_player(peer.get_unique_id())
 		
 		load_world.rpc()
 		
@@ -75,10 +75,12 @@ func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int)
 	if response == 1:
 		var id = Steam.getLobbyOwner(lobby)
 		if id != Steam.getSteamID():
+			print("if")
 			peer = SteamMultiplayerPeer.new()
 			peer.create_client(id, 0)
 			multiplayer.set_multiplayer_peer(peer)
 		else:
+			print("else")
 			add_player(multiplayer.get_unique_id()) 
 
 func add_player(p_id):
