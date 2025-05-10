@@ -83,6 +83,7 @@ func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int)
 			print("else")
 			
 
+@rpc("authority")
 func add_player(p_id):
 	var player_scene = load("res://player.tscn")
 
@@ -103,7 +104,7 @@ func _player_connected(id):
 	#register_player.rpc_id(id, player_name)
 	print(id)
 	print(multiplayer.get_unique_id())
-	add_player(multiplayer.get_unique_id())
+	add_player.rpc_id(id, id)
 
 
 # Callback from SceneTree.
