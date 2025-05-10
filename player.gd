@@ -9,6 +9,9 @@ var stunned = false
 @onready
 var last_bomb_time = BOMB_RATE
 
+func _enter_tree() -> void:
+	set_multiplayer_authority(int(name))
+
 func _ready():
 	stunned = false
 	if str(name).is_valid_int():

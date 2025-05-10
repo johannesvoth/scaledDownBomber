@@ -4,3 +4,5 @@ res://multiplayer_manager.gd
 res://player.tscn
 res://world.tscn
 res://lobby.tscn
+res://player_spawner.gd
+res://player.gd

@@ -57,6 +57,8 @@ func _on_lobby_created(_connect: int, _lobby_id: int):
 		peer.create_host(0)
 		multiplayer.set_multiplayer_peer(peer)
 		
+		add_player(peer.get_unique_id())
+		
 		print("Create lobby id:",str(lobby_id))
 	else:
 		print("Error on create lobby!")
@@ -64,6 +66,7 @@ func _on_lobby_created(_connect: int, _lobby_id: int):
 func join_game(lobby_id, new_player_name):
 	player_name = new_player_name
 	Steam.joinLobby(int(lobby_id))
+	
 
 func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int):
 	print("onlz when you join probably")
@@ -73,8 +76,6 @@ func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int)
 			peer = SteamMultiplayerPeer.new()
 			peer.create_client(id, 0)
 			multiplayer.set_multiplayer_peer(peer)
-			
-			add_player(peer.get_unique_id())
 
 
 func add_player(p_id):
@@ -94,6 +95,7 @@ func add_player(p_id):
 func _player_connected(id):
 	# Registration of a client beings here, tell the connected player that we are here.
 	register_player.rpc_id(id, player_name)
+	add_player(id)
 
 
 # Callback from SceneTree.
