@@ -95,6 +95,7 @@ func add_player(p_id):
 
 # Callback from SceneTree.
 func _player_connected(id):
+	print("player connected callback SceneTree")
 	# Registration of a client beings here, tell the connected player that we are here.
 	register_player.rpc_id(id, player_name)
 	add_player(id)
@@ -112,6 +113,7 @@ func _player_disconnected(id):
 
 # Callback from SceneTree, only for clients (not server).
 func _connected_ok():
+	print("player OK callback SceneTree")
 	# We just connected to a server
 	connection_succeeded.emit()
 

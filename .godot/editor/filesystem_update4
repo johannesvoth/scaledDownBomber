@@ -2,4 +2,5 @@ res://player.tscn
 res://world.tscn
 res://game.tscn
 res://lobby.tscn
+res://player_spawner.gd
 res://multiplayer_manager.gd
