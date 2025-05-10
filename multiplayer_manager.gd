@@ -98,7 +98,7 @@ func _player_connected(id):
 	print("player connected callback SceneTree")
 	# Registration of a client beings here, tell the connected player that we are here.
 	#register_player.rpc_id(id, player_name)
-	add_player.rpc_id(id)
+	add_player.rpc_id(id, multiplayer.get_unique_id())
 
 
 # Callback from SceneTree.
