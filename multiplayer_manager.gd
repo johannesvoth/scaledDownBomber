@@ -78,6 +78,8 @@ func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int)
 			peer = SteamMultiplayerPeer.new()
 			peer.create_client(id, 0)
 			multiplayer.set_multiplayer_peer(peer)
+		else:
+			add_player(multiplayer.get_unique_id()) 
 
 func add_player(p_id):
 	var player_scene = load("res://player.tscn")
@@ -112,7 +114,7 @@ func _player_disconnected(id):
 # Callback from SceneTree, only for clients (not server).
 func _connected_ok():
 	print("player OK callback SceneTree")
-	add_player(peer.get_unique_id())
+	
 	# We just connected to a server
 	connection_succeeded.emit()
 
