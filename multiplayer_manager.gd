@@ -81,7 +81,7 @@ func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int)
 			multiplayer.set_multiplayer_peer(peer)
 		else:
 			print("else")
-			add_player(multiplayer.get_unique_id()) 
+			
 
 func add_player(p_id):
 	var player_scene = load("res://player.tscn")
@@ -101,6 +101,9 @@ func _player_connected(id):
 	print("player connected callback SceneTree")
 	# Registration of a client beings here, tell the connected player that we are here.
 	#register_player.rpc_id(id, player_name)
+	print(id)
+	print(multiplayer.get_unique_id())
+	add_player(multiplayer.get_unique_id())
 
 
 # Callback from SceneTree.
