@@ -11,4 +11,4 @@ func spawn_player(p_id):
 	var host_player = player_scene.instantiate()
 	host_player.name = str(p_id)
 	
-	players_spawn.add_child(host_player)
+	players_spawn.add_child(host_player, true)

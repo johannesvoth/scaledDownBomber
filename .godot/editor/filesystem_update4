@@ -1,8 +1,5 @@
-res://game.tscn
-res://game_ui.gd
-res://multiplayer_manager.gd
 res://player.tscn
 res://world.tscn
+res://game.tscn
 res://lobby.tscn
-res://player_spawner.gd
-res://player.gd
+res://multiplayer_manager.gd

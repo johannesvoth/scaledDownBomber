@@ -59,6 +59,8 @@ func _on_lobby_created(_connect: int, _lobby_id: int):
 		
 		add_player(peer.get_unique_id())
 		
+		load_world.rpc()
+		
 		print("Create lobby id:",str(lobby_id))
 	else:
 		print("Error on create lobby!")
@@ -84,7 +86,7 @@ func add_player(p_id):
 	var host_player = player_scene.instantiate()
 	host_player.name = str(p_id)
 	host_player.set_multiplayer_authority(p_id)
-	players_spawn.add_child(host_player)
+	players_spawn.add_child(host_player, true)
 
 
 
@@ -139,7 +141,7 @@ func load_world(): # I would have to check the hotjoin replication with that stu
 	# Change scene.
 	var world = load("res://world.tscn").instantiate()
 	get_tree().get_root().add_child(world)
-	get_tree().get_root().get_node("Lobby").hide()
+
 
 	get_tree().set_pause(false) # Unpause and unleash the game!
 
