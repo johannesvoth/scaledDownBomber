@@ -57,9 +57,9 @@ func _on_lobby_created(_connect: int, _lobby_id: int):
 		peer.create_host(0)
 		multiplayer.set_multiplayer_peer(peer)
 		
-		#add_player(peer.get_unique_id())
+		add_player(peer.get_unique_id())
 		
-		load_world.rpc()
+		load_world()
 		
 		print("Create lobby id:",str(lobby_id))
 	else:
@@ -146,15 +146,12 @@ func unregister_player(id):
 	players.erase(id)
 	player_list_changed.emit()
 
-@rpc("call_local")
-func load_world(): # I would have to check the hotjoin replication with that stuff
-	# Change scene.
+@onready var world_spawner: MultiplayerSpawner = $"../WorldSpawner"
+
+
+func load_world(): 
 	var world = load("res://world.tscn").instantiate()
-	get_tree().get_root().add_child(world)
-
-
-	get_tree().set_pause(false) # Unpause and unleash the game!
-
+	world_spawner.add_child(world)
 
 
 func begin_game():

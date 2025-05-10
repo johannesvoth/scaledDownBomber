@@ -19,3 +19,7 @@ offset_bottom = 310.0
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://dviwgv2ty8v6u")
 spawn_path = NodePath("../PlayersSpawn")
+
+[node name="WorldSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://by3f5o7dyoqx4")
+spawn_path = NodePath(".")
